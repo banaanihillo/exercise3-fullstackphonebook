@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.css"],"names":[],"mappings":"AAAA,OACI,eACJ,CAEA,SACI,UAAc,CACd,cAAe,CACf,iBAAkB,CAClB,cACJ","file":"main.0417805d.chunk.css","sourcesContent":["button {\r\n    margin-left: 5px\r\n}\r\n\r\n.message {\r\n    color: fuchsia;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n    font-size: 20px;\r\n}"]}
