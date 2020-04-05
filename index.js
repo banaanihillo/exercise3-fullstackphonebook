@@ -27,9 +27,19 @@ app.get("/api/persons", (request, response) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
-    Person.findById(request.params.id).then(person => {
-        response.json(person.toJSON())
-    })
+    Person.findById(request.params.id)
+        .then(person => {
+            if (person) {
+                response.json(person.toJSON())
+            } else {
+                console.log(`Found no person with the id ${request.params.id}`)
+                response.status(404).end()
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            response.status(400).send({error: "The id is in the wrong format"})
+        })
 })
 
 app.get("/info", (request, response) => {
@@ -38,10 +48,13 @@ app.get("/info", (request, response) => {
         This request was made on ${date}.`)
 })
 
-app.delete("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id)
-    persons = (persons.filter(person => person.id !== id))
-    response.status(204).end()
+app.delete("/api/persons/:id", (request, response, next) => {
+    Person.findByIdAndRemove(request.params.id)
+        .then(result => {
+            console.log(`Successfully deleted ${request.params.id}`)
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.post("/api/persons", (request, response) => {
