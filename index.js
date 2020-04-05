@@ -26,7 +26,7 @@ app.get("/api/persons", (request, response) => {
     })
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
     Person.findById(request.params.id)
         .then(person => {
             if (person) {
@@ -36,10 +36,7 @@ app.get("/api/persons/:id", (request, response) => {
                 response.status(404).end()
             }
         })
-        .catch(error => {
-            console.log(error)
-            response.status(400).send({error: "The id is in the wrong format"})
-        })
+        .catch(error => next(error))
 })
 
 app.get("/info", (request, response) => {
@@ -93,6 +90,19 @@ app.post("/api/persons", (request, response) => {
         response.json(savedPerson.toJSON())
     })
 })
+
+const notFound = (request, response) => {
+    response.status(404).send({error: "Something very bad happened"})
+}
+app.use(notFound)
+
+const handleError = (error, request, response, next) => {
+    if (error.name === "CastError") {
+        return response.status(400).send({error: "Wrong id format"})
+    }
+    next(error)
+}
+app.use(handleError)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
