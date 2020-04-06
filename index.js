@@ -62,22 +62,14 @@ app.post("/api/persons", (request, response) => {
             error: "Looks like the request is missing some vital information."
         })
     }
-
-    /*
-    if (persons.some(person =>
-            ( (person.name === body.name) ||
-            (person.number === body.number) )
-        )
-     ) {
-         return response.status(400).json({
-             error: "Duplicates are not allowed here."
-            })
-        }
-    */
     
     const person = new Person({
         name: body.name,
         number: body.number
+    })
+
+    person.save().then(savedPerson => {
+        response.json(savedPerson.toJSON())
     })
 
     const content = JSON.stringify(body)
@@ -85,10 +77,19 @@ app.post("/api/persons", (request, response) => {
     morgan.token("content", function () {
         return content
     })
+})
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson.toJSON())
-    })
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson.toJSON())
+        })
+        .catch(error => next(error))
 })
 
 const notFound = (request, response) => {
