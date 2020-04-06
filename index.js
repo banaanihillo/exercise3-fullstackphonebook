@@ -41,8 +41,10 @@ app.get("/api/persons/:id", (request, response, next) => {
 
 app.get("/info", (request, response) => {
     const date = new Date()
-    response.send(`The phonebook currently has ${persons.length} entries.
-        This request was made on ${date}.`)
+    Person.find({}).then(persons => {
+        response.send(`The phonebook currently has ${persons.length} entries.
+            This request was made on ${date}.`)
+    })
 })
 
 app.delete("/api/persons/:id", (request, response, next) => {
