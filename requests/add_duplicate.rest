@@ -2,6 +2,6 @@ POST http://localhost:3001/api/persons/
 content-type: application/json
 
 {
-    "name": "Identity Thief",
-    "number": "0-ONE"
+    "name": "Criminal Scum",
+    "number": "101-HELLO"
 }
