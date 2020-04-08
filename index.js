@@ -1,21 +1,21 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
-var morgan = require("morgan");
-const cors = require('cors');
-const Person = require("./models/person");
-app.use(cors());
-app.use(express.json());
-app.use(express.static("build"));
+require("dotenv").config()
+var express = require("express")
+var app = express()
+var morgan = require("morgan")
+var cors = require("cors")
+var Person = require("./models/person")
+app.use(cors())
+app.use(express.json())
+app.use(express.static("build"))
 
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms", {
-    skip: function (request, response) {
+    skip: function (request) {
         return request.method === "POST"
     }
 }))
 
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :content", {
-    skip: function (request, response) {
+    skip: function (request) {
         return request.method !== "POST"
     }
 }))
@@ -49,7 +49,7 @@ app.get("/info", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             console.log(`Successfully deleted ${request.params.id}`)
             response.status(204).end()
         })
